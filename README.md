@@ -6,6 +6,8 @@ DroidPilot is a local Android engineering console. Select an authorized handset,
 
 *Live ADB inspection of the Samsung handset. All three current values came from the phone. The short identifier beside Ready is a temporary session label.* [Simulated apply and backup example](docs/media/dashboard-demo.png)
 
+The live demo applies the 0.5× profile twice, verifies that the original values are preserved, and restores all three settings. The same handset completed ten force-stop-based Display Settings launches with a median of 1,181.5 ms. [Watch the 85-second Samsung demo](docs/media/samsung-adb-demo.mp4) · [Handset evidence and timing data](docs/handset.md)
+
 ## Run the dashboard
 
 From the repository root in PowerShell, run the following with Python 3.10+. The production React bundle ships with the project.

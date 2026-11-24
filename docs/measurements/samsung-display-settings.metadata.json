@@ -1,0 +1,7 @@
+{
+  "component": "com.android.settings/.Settings$DisplaySettingsActivity",
+  "model": "SM-A135F",
+  "android_version": "14",
+  "method": "force-stop followed by am start -W",
+  "requested_runs": 10
+}

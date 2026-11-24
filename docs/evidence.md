@@ -4,11 +4,11 @@ This repository contains a new AI-assisted project. Evidence below distinguishes
 
 | Feature | Implementation | Automated evidence | Device-tested | Evidence to add |
 | --- | --- | --- | --- | --- |
-| Device Control Center | Implemented | Desktop and mobile browser checks; demo apply twice and restore; JSON API and confirmation checks | Live handset selection, telemetry and animation inspection | [Real Samsung dashboard screenshot](media/samsung-inspection.png). Screen control and write demo pending |
+| Device Control Center | Implemented | Desktop and mobile browser checks; demo apply twice and restore; JSON API and confirmation checks | Live Samsung selection, telemetry, animation writes and restore | [Real Samsung dashboard screenshot](media/samsung-inspection.png) and [live ADB demo](media/samsung-adb-demo.mp4). scrcpy live control remains unverified |
 | ADB Doctor | Implemented | Mock-tested; missing-ADB error exercised locally | Authorized wireless inventory and model/release reads on Samsung SM-A135F | Pre-authorization USB capture pending. [Handset observations](handset.md) |
-| Animation | Implemented | Mock-tested with repeated apply, absent values, rollback and retry | Initial three scales read on Samsung SM-A135F | Values after both applies and after restore |
+| Animation | Implemented | Mock-tested with repeated apply, absent values, rollback and retry | Applied twice and restored all three verified values on Samsung SM-A135F | [Checkpoint values and screenshots](handset.md#animation-transaction) |
 | Crash Triage | Implemented | Mock-tested and compared against an explicitly simulated example | Not tested | Sanitized crash report from an approved test app |
-| Startup Timer | Implemented | Mock-tested for valid, missing and failed measurements | Not tested | CSV, metadata, success count and median from a real series |
+| Startup Timer | Implemented | Mock-tested for valid, missing and failed measurements | 10/10 Display Settings launches on Samsung SM-A135F | [CSV, metadata and median](handset.md#startup-timing) |
 | Magisk Boot Report | Implemented | ZIP contents, LF endings and POSIX syntax checked locally | Not tested | Two reports after two separately approved boots |
 
 ## Capture a device demo

@@ -12,6 +12,8 @@ dist/
 !examples/simulated-crash.log
 *.csv
 *.metadata.json
+!docs/measurements/samsung-display-settings.csv
+!docs/measurements/samsung-display-settings.metadata.json
 crash-report.md
 private/
 backups/
