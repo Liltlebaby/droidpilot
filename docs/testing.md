@@ -19,7 +19,7 @@ Windows, Python 3.12.10. The source-tree runs used `PYTHONPATH=src`. The command
 
 | Command or check | Observed result |
 | --- | --- |
-| `python -m unittest discover -s tests -v` | 31 tests passed, including loopback HTTP and device-service integration |
+| `python -m unittest discover -s tests -v` | 32 tests, including loopback HTTP, device-service integration and nested activity names |
 | `python -m compileall -q src tests` | Exit 0 |
 | `python -m droidpilot --help` | CLI entry point lists dashboard, doctor, animation, crash and startup |
 | `python -m droidpilot crash --input examples/simulated-crash.log --output ../../work/final-simulated-report.md` | Exit 0. One simulated event. The same CLI path was compared with the expected Markdown in the suite |

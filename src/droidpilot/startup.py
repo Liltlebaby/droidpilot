@@ -1,13 +1,14 @@
 import csv
 import json
 import re
+import shlex
 from datetime import datetime, timezone
 from statistics import median
 
 from .adb import PilotError
 
 PACKAGE = r"[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*"
-ACTIVITY = r"\.?[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*"
+ACTIVITY = r"\.?[A-Za-z_][A-Za-z0-9_]*(?:[.$][A-Za-z_][A-Za-z0-9_]*)*"
 COLUMNS = ("run", "timestamp_utc", "status", "total_time_ms", "error")
 
 
@@ -55,7 +56,8 @@ def measure(adb, device, component, runs, output):
                 stopped = adb.command(device, "shell", "am", "force-stop", package)
                 if stopped:
                     raise PilotError("Force-stop returned diagnostics. Check the selected app.")
-                result = adb.command(device, "shell", "am", "start", "-W", "-n", component, timeout=60)
+                # ADB forwards these arguments to the device shell. Preserve nested class names.
+                result = adb.command(device, "shell", "am", "start", "-W", "-n", shlex.quote(component), timeout=60)
                 elapsed = timing(result)
                 times.append(elapsed)
                 row.update(status="ok", total_time_ms=elapsed)

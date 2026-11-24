@@ -219,6 +219,15 @@ class CrashTests(unittest.TestCase):
 
 
 class StartupTests(unittest.TestCase):
+    def test_nested_settings_activity_preserves_dollar_sign(self):
+        component = "com.android.settings/.Settings$DisplaySettingsActivity"
+        with tempfile.TemporaryDirectory() as tmp, redirect_stdout(io.StringIO()):
+            replies = [result("Samsung"), result("14"), result(), result("Status: ok\nTotalTime: 48")]
+            with patch("subprocess.run", side_effect=replies) as run:
+                code = startup.measure(ADB(), PHONE, component, 1, Path(tmp) / "runs.csv")
+            self.assertEqual(code, 0)
+            self.assertEqual(run.call_args.args[0][-1], "'" + component + "'")
+
     def test_timing(self):
         self.assertEqual(startup.timing("Status: ok\nTotalTime: 320"), 320)
         for data in ("Status: timeout\nTotalTime: 1", "Status: ok", "TotalTime: 10",
