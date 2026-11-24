@@ -82,6 +82,14 @@ New-Item -ItemType Directory -Force private | Out-Null
 
 The check reads boot properties and looks up the `su` and `magisk` paths. It never runs `su`. On the Samsung test handset every row passed: bootloader locked, verified boot green, SELinux enforcing, release-keys build and Knox warranty bit 0. The guide explains each signal, the Magisk workflow for a Samsung phone, its risks, and why the daily-use handset stays unrooted. [Root and boot integrity guide](docs/rooting.md)
 
+![Root and boot integrity panel for the Samsung SM-A135F: stock and locked, no root detected](docs/media/samsung-security-check.png)
+
+*Live dashboard reading of the Samsung handset over wireless ADB.*
+
+![The nine adb commands the dashboard ran to inspect the handset, with the serial shown as a placeholder](docs/media/samsung-adb-commands.png)
+
+*Every operation lists the commands it ran. The serial is replaced with `<device>`.*
+
 ## Animation demo
 
 Read the original scales, set all three animation durations to 0.5×, apply again, then restore. The second apply exercises the original-backup guarantee. Compare each restored value with the first output. Use a test device that permits ADB global settings writes.

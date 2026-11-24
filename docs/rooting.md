@@ -25,6 +25,10 @@ Stock and locked | no root detected
 
 The dashboard showed the same nine rows for this phone. The dashboard's **ADB commands** panel lists the commands each operation ran, with the serial replaced by `<device>`.
 
+![Root and boot integrity panel for the Samsung SM-A135F](media/samsung-security-check.png)
+
+![The adb commands the dashboard ran to inspect the handset](media/samsung-adb-commands.png)
+
 ## What each signal means
 
 | Check | Source | Stock value | What a change indicates |
