@@ -1,11 +1,12 @@
 import json
+import subprocess
 import tempfile
 import threading
 import unittest
 from functools import partial
 from http.client import HTTPConnection
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from droidpilot import animation
 from droidpilot.adb import Device, PilotError
@@ -61,6 +62,34 @@ class ConsoleTests(unittest.TestCase):
     def test_battery_scale_and_missing_fields(self):
         self.assertEqual(battery_values("level: 60\nscale: 80\ntemperature: 294"), {"percent": 75, "temperature": 29.4})
         self.assertEqual(battery_values("level: 80\nscale: 0"), {"percent": None, "temperature": None})
+
+    def test_mirror_uses_selected_handset_and_reuses_its_window(self):
+        device = Device("authorized-test-transport", "device")
+        process = Mock()
+        process.poll.return_value = None
+        process.wait.side_effect = [subprocess.TimeoutExpired("scrcpy", 0.8), 0]
+        with patch("droidpilot.console.shutil.which", return_value="scrcpy"), patch(
+            "droidpilot.console.subprocess.Popen", return_value=process
+        ) as launch:
+            self.console.mirror(device)
+            self.assertIn("already open", self.console.mirror(device)["message"])
+            self.assertEqual(launch.call_count, 1)
+            self.assertEqual(launch.call_args.args[0][:3], ["scrcpy", "--serial", device.serial])
+            self.console.close()
+            process.terminate.assert_called_once()
+            process.poll.return_value = 0
+
+    def test_mirror_reports_a_missing_tool_and_early_exit(self):
+        device = Device("authorized-test-transport", "device")
+        with patch("droidpilot.console.shutil.which", return_value=None):
+            with self.assertRaisesRegex(PilotError, "Install scrcpy"):
+                self.console.mirror(device)
+        with patch("droidpilot.console.shutil.which", return_value="scrcpy"), patch(
+            "droidpilot.console.subprocess.Popen"
+        ):
+            with self.assertRaisesRegex(PilotError, "exited during startup"):
+                self.console.mirror(device)
+        self.assertFalse(self.console.mirrors)
 
 
 class EndpointTests(unittest.TestCase):

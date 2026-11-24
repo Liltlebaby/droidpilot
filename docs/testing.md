@@ -19,7 +19,8 @@ Windows, Python 3.12.10. The source-tree runs used `PYTHONPATH=src`. The command
 
 | Command or check | Observed result |
 | --- | --- |
-| `python -m unittest discover -s tests -v` | 32 tests, including loopback HTTP, device-service integration and nested activity names |
+| `python -m unittest discover -s tests -v` | 34 tests covering loopback HTTP, device-service integration, scrcpy process lifecycle and nested activity names |
+| `python -m pip install --no-deps --no-index --no-build-isolation -e .` | Installed 0.2.0 in a fresh Windows virtual environment using local build tools. The installed console entry point displayed help from outside the repository |
 | `python -m compileall -q src tests` | Exit 0 |
 | `python -m droidpilot --help` | CLI entry point lists dashboard, doctor, animation, crash and startup |
 | `python -m droidpilot crash --input examples/simulated-crash.log --output ../../work/final-simulated-report.md` | Exit 0. One simulated event. The same CLI path was compared with the expected Markdown in the suite |

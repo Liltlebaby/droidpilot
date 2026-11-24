@@ -61,6 +61,13 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200, body, kind)
 
     def do_POST(self):
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            return self.reply(400, {"error": "Invalid request length."})
+        # Consume small rejected bodies too. Closing a Windows socket with queued
+        # request data can reset the connection before the browser receives its error.
+        body = self.rfile.read(min(max(length, 0), 8192))
         if (self.headers.get("Host") != self.authority or
                 self.headers.get("Origin") != "http://" + self.authority or
                 self.headers.get("X-DroidPilot-Session") != self.token):
@@ -70,10 +77,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.headers.get_content_type() != "application/json":
             return self.reply(415, {"error": "Expected JSON."})
         try:
-            length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length <= 2048:
                 return self.reply(413, {"error": "Invalid request size."})
-            data = json.loads(self.rfile.read(length))
+            data = json.loads(body)
             if not isinstance(data, dict):
                 raise ValueError
         except (ValueError, UnicodeError):
