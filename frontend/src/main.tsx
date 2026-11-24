@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Device, Details, Mode, Operation, request } from "./api";
 import { Confirmation, Profile } from "./Profile";
+import { Commands, Security } from "./Security";
 import "./style.css";
 
 const statuses: Record<string, string> = {
@@ -28,6 +29,7 @@ function Workspace({
   const [busy, setBusy] = useState(true);
   const [pending, setPending] = useState<Operation | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
+  const [commands, setCommands] = useState<string[]>([]);
   const sequence = useRef(0);
   const log = (message: string) =>
     setEvents((prev) =>
@@ -51,7 +53,8 @@ function Workspace({
     const details = await request<Details>(mode, "inspect", device.id);
     if (seq === sequence.current) {
       setInfo(details);
-      log("Read animation profile · " + details.model);
+      setCommands(details.commands);
+      log("Read device profile · " + details.model);
     }
   }
   async function load(keep?: string) {
@@ -102,16 +105,18 @@ function Workspace({
     setError("");
     try {
       if (action === "mirror") {
-        const result = await request<{ message: string }>(
+        const result = await request<{ message: string; commands: string[] }>(
           mode,
           action,
           active.id,
           true,
         );
+        setCommands(result.commands);
         log(result.message);
       } else {
         const result = await request<Details>(mode, action, active.id, true);
         setInfo(result);
+        setCommands(result.commands);
         log(
           (action === "apply" ? "Applied 0.5×" : "Restored original profile") +
             " · 3 values verified",
@@ -184,6 +189,11 @@ function Workspace({
                 <h1>{info.model}</h1>
                 <span>Android {info.android_version}</span>
                 <span>{mode === "demo" ? "Sample device" : "ADB device"}</span>
+                {info.security && (
+                  <span className={info.security.rooted ? "rooted" : ""}>
+                    {info.security.rooted ? "Root detected" : "Not rooted"}
+                  </span>
+                )}
               </div>
               <button
                 disabled={!info.mirrorAvailable || busy}
@@ -226,6 +236,7 @@ function Workspace({
               </p>
             )}
             <Profile info={info} busy={busy} confirm={setPending} />
+            <Security report={info.security} />
           </>
         ) : (
           <section className="empty">
@@ -266,6 +277,7 @@ function Workspace({
             )}
           </ol>
         </section>
+        <Commands commands={commands} />
         {pending && active && (
           <Confirmation
             name={active.name}

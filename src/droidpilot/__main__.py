@@ -2,7 +2,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import animation, crash, startup
+from . import animation, crash, security, startup
 from .adb import ADB, PilotError
 from .doctor import diagnose
 
@@ -15,6 +15,8 @@ def parser():
     ui.add_argument("--no-browser", action="store_true", help="print the URL without opening a browser")
     doctor = commands.add_parser("doctor", help="inspect ADB connections with redacted serials")
     doctor.add_argument("--serial", help="select one device for detailed inspection")
+    secure = commands.add_parser("security", help="read-only root, bootloader and verified-boot check")
+    secure.add_argument("--serial", required=True)
     anim = commands.add_parser("animation", help="inspect or change global animation scales")
     anim.add_argument("action", choices=("show", "apply", "restore"))
     anim.add_argument("--serial", required=True)
@@ -59,6 +61,14 @@ def execute(args):
         print(f"Wrote {args.output.name}")
         return 0
     device = adb.select(args.serial)
+    if args.command == "security":
+        report = security.check(adb, device)
+        marks = {"ok": "OK  ", "warn": "WARN", "info": "INFO"}
+        # Plain separators keep output printable on legacy Windows code pages.
+        for row in report["rows"]:
+            print(f"{marks[row['state']]}  {row['label']}: {row['value'].replace('·', '|')}")
+        print(report["summary"].replace("·", "|"))
+        return 0
     if args.command == "animation":
         if args.action == "show":
             values = animation.snapshot(adb, device)

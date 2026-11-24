@@ -2,12 +2,20 @@ export type Mode = "demo" | "live";
 export type Operation = "apply" | "restore" | "mirror";
 export type Device = { id: string; name: string; state: string };
 export type Scales = Record<string, string | null>;
+export type Check = {
+  label: string;
+  state: "ok" | "warn" | "info";
+  value: string;
+};
+export type Security = { summary: string; rooted: boolean; rows: Check[] };
 export type Details = {
   model: string;
   android_version: string;
   current: Scales;
   original: Scales | null;
   battery: { percent: number | null; temperature: number | null };
+  security: Security | null;
+  commands: string[];
   mirrorAvailable: boolean;
 };
 const token = document.querySelector<HTMLMetaElement>(

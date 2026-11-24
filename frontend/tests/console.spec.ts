@@ -66,3 +66,29 @@ test("shows an offline device and keeps the profile readable on mobile", async (
     ),
   ).toBe(true);
 });
+
+test("reports boot integrity and lists the exact adb commands", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const integrity = page.getByRole("region", {
+    name: "Root and boot integrity",
+  });
+  await expect(
+    integrity.getByText("Stock and locked · no root detected"),
+  ).toBeVisible();
+  await expect(integrity.locator(".checks li.ok")).toHaveCount(6);
+  await expect(page.getByText("Not rooted", { exact: true })).toBeVisible();
+  await page.getByText(/ADB commands · last operation/).click();
+  await expect(
+    page.getByText("$ adb -s <device> shell getprop", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Apply 0.5×", exact: true }).click();
+  await page.getByRole("button", { name: "Confirm" }).click();
+  await expect(
+    page.getByText(
+      "$ adb -s <device> shell settings put global window_animation_scale 0.5",
+    ),
+  ).toBeVisible();
+  await expect(page.locator(".commands")).not.toContainText("sample-1");
+});

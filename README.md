@@ -1,6 +1,8 @@
 # DroidPilot · Android Device Control Center
 
-DroidPilot is a local Android engineering console. Select an authorized handset, inspect its battery and animation settings, change all three animation scales, and restore their exact original values. Open a scrcpy window to control the selected device from your computer. The Python CLI also triages crashes and times app launches. This is a new AI-assisted portfolio project.
+[![Tests](https://github.com/Liltlebaby/droidpilot/actions/workflows/tests.yml/badge.svg)](https://github.com/Liltlebaby/droidpilot/actions/workflows/tests.yml)
+
+DroidPilot is a local Android engineering console. Select an authorized handset, inspect its battery and animation settings, change all three animation scales, and restore their exact original values. A read-only check reports root, bootloader and verified-boot state, and every operation lists the exact `adb` commands it ran. Open a scrcpy window to control the selected device from your computer. The Python CLI also triages crashes and times app launches. This is a new AI-assisted portfolio project.
 
 ![Live Device Control Center inspecting an authorized Samsung SM-A135F running Android 14](docs/media/samsung-inspection.png)
 
@@ -21,7 +23,7 @@ $env:PYTHONPATH = "src"
 python -m droidpilot dashboard
 ```
 
-**One-minute walkthrough.** In **Demo**, select Pixel 8, click **Apply 0.5×** and confirm. Apply a second time and compare the Original and Current columns. Click **Restore original** and check the verified values and session activity. Switch to **ADB** to list devices from your own computer. Select the handset explicitly, then use **Open phone screen** if scrcpy is installed. Stop the local server with Ctrl+C.
+**One-minute walkthrough.** In **Demo**, select Pixel 8, click **Apply 0.5×** and confirm. Apply a second time and compare the Original and Current columns. Click **Restore original** and check the verified values and session activity. Review **Root and boot integrity**, then open **ADB commands · last operation** to see every command the restore ran. Switch to **ADB** to list devices from your own computer. Select the handset explicitly, then use **Open phone screen** if scrcpy is installed. Stop the local server with Ctrl+C.
 
 The ADB mode needs Android Platform Tools on PATH. Screen mirroring also needs scrcpy on PATH. The dashboard binds to the loopback interface on the printed port. ADB serials stay on the host, and browser requests use per-session device handles. Demo runs share the same animation transaction logic with a simulated settings provider and an isolated temporary backup directory. [scrcpy installation](https://github.com/Genymobile/scrcpy)
 
@@ -39,13 +41,14 @@ The fixture contains one fatal exception. The parser finds a missing note ID and
 | Tool | What a reviewer can inspect | Local verification |
 | --- | --- | --- |
 | Device Control Center | Selected-device inspection, battery readout, confirmed tweaks and scrcpy launch | React browser tests, loopback API integration tests and a real UI screenshot with simulated input |
+| Root and Boot Integrity | Root binaries, bootloader lock, verified boot, dm-verity, SELinux, build keys and Samsung Knox bit | Stock and rooted fixtures, dashboard browser test, and a live read of the Samsung handset |
 | ADB Doctor | Connection states, USB authorization guidance, model and Android release | Mock transport and missing-ADB CLI check |
 | Animation | Per-device original values, verified writes, rollback and exact restore | Stateful mock settings provider |
 | Crash Triage | Multiple fatal events, cause chains and source locations | Simulated file through the real CLI and mock device capture |
 | Startup Timer | One CSV row per attempt, metadata and median of successful launches | Mock activity-manager responses |
 | Magisk Boot Report | Private, module-local reports and retention of ten completed files | ZIP integrity and POSIX syntax checked. Device run pending |
 
-The toolkit connected to a Samsung SM-A135F running Android 14 over wireless ADB and read the three animation scales, model, Android release and battery telemetry. Each feature's validation scope is recorded separately. [Handset observations](docs/handset.md) · [Evidence checklist](docs/evidence.md)
+The toolkit connected to a Samsung SM-A135F running Android 14 over wireless ADB and read the three animation scales, model, Android release, battery telemetry and boot-integrity state. Each feature's validation scope is recorded separately. [Handset observations](docs/handset.md) · [Evidence checklist](docs/evidence.md)
 
 ## Windows installation
 
@@ -70,6 +73,14 @@ $serial = Read-Host "Test device serial"
 & $py -m droidpilot doctor --serial $serial
 New-Item -ItemType Directory -Force private | Out-Null
 ```
+
+## Root and boot integrity
+
+```powershell
+& $py -m droidpilot security --serial $serial
+```
+
+The check reads boot properties and looks up the `su` and `magisk` paths. It never runs `su`. On the Samsung test handset every row passed: bootloader locked, verified boot green, SELinux enforcing, release-keys build and Knox warranty bit 0. The guide explains each signal, the Magisk workflow for a Samsung phone, its risks, and why the daily-use handset stays unrooted. [Root and boot integrity guide](docs/rooting.md)
 
 ## Animation demo
 
@@ -110,7 +121,8 @@ src/droidpilot/
   __main__.py    CLI arguments, human approval, dispatch and exit codes
   adb.py         Subprocess transport, timeouts and device selection
   dashboard.py   Loopback HTTP server, same-origin session checks and packaged web assets
-  console.py     Device operations, battery parsing, demo adapter and scrcpy lifecycle
+  console.py     Device operations, battery parsing, command log, demo adapter and scrcpy lifecycle
+  security.py    Read-only root, bootloader and verified-boot assessment
   web/           Built React app and static entry point
   doctor.py      Redacted inventory and connection advice
   animation.py   Backup, change, verify, rollback and restore

@@ -5,6 +5,7 @@ This repository contains a new AI-assisted project. Evidence below distinguishes
 | Feature | Implementation | Automated evidence | Device-tested | Evidence to add |
 | --- | --- | --- | --- | --- |
 | Device Control Center | Implemented | Desktop and mobile browser checks; demo apply twice and restore; JSON API and confirmation checks | Live Samsung selection, telemetry, animation writes and restore | [Real Samsung dashboard screenshot](media/samsung-inspection.png) and [live ADB demo](media/samsung-adb-demo.mp4). scrcpy live control remains unverified |
+| Root and Boot Integrity | Implemented | Stock, rooted and missing-property fixtures; dashboard browser test with redacted command log | Read-only check on Samsung SM-A135F: not rooted, bootloader locked, verified boot green, SELinux enforcing, Knox bit 0 | [Results and signal guide](rooting.md). A rooted device result is pending |
 | ADB Doctor | Implemented | Mock-tested; missing-ADB error exercised locally | Authorized wireless inventory and model/release reads on Samsung SM-A135F | Pre-authorization USB capture pending. [Handset observations](handset.md) |
 | Animation | Implemented | Mock-tested with repeated apply, absent values, rollback and retry | Applied twice and restored all three verified values on Samsung SM-A135F | [Checkpoint values and screenshots](handset.md#animation-transaction) |
 | Crash Triage | Implemented | Mock-tested and compared against an explicitly simulated example | Not tested | Sanitized crash report from an approved test app |

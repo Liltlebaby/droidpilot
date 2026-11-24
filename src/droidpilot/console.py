@@ -3,14 +3,21 @@ import hashlib
 import hmac
 import re
 import secrets
+import shlex
 import shutil
 import subprocess
 import tempfile
 import threading
 from pathlib import Path
 
-from . import animation
+from . import animation, security
 from .adb import ADB, Device, PilotError, RSA_HINT
+
+DEMO_PROPS = {"ro.product.model": "Pixel 8", "ro.build.version.release": "14",
+              "ro.boot.verifiedbootstate": "green", "ro.boot.flash.locked": "1",
+              "ro.boot.vbmeta.device_state": "locked", "ro.build.type": "user",
+              "ro.build.tags": "release-keys", "ro.debuggable": "0", "ro.crypto.state": "encrypted",
+              "ro.build.version.security_patch": "2026-10-05"}
 
 
 class DemoADB(ADB):
@@ -24,8 +31,12 @@ class DemoADB(ADB):
     def command(self, device, *args, timeout=15):
         if device.state != "device":
             raise PilotError("Sample handset is offline.")
+        if args == ("shell", "getprop"):
+            return "\n".join(f"[{key}]: [{value}]" for key, value in DEMO_PROPS.items())
+        if args == ("shell", security.PROBE):
+            return "selinux=Enforcing\nsu=\nmagisk="
         if args[:2] == ("shell", "getprop"):
-            return {"ro.product.model": "Pixel 8", "ro.build.version.release": "14"}[args[2]]
+            return DEMO_PROPS[args[2]]
         if args == ("shell", "dumpsys", "battery"):
             return "level: 78\nscale: 100\ntemperature: 312"
         if args[:2] == ("shell", "settings"):
@@ -38,6 +49,23 @@ class DemoADB(ADB):
                 self.values.pop(key, None)
             return ""
         raise PilotError("Unsupported simulated operation.")
+
+
+class Recorder:
+    """Delegates to a transport and records each command with the serial redacted."""
+    def __init__(self, adb):
+        self.adb, self.log = adb, []
+
+    def devices(self):
+        self.log.append("adb devices -l")
+        return self.adb.devices()
+
+    def command(self, device, *args, timeout=15):
+        self.log.append("adb -s <device> " + " ".join(map(shlex.quote, args)))
+        return self.adb.command(device, *args, timeout=timeout)
+
+    def info(self, device):
+        return ADB.info(self, device)
 
 
 def battery_values(text):
@@ -77,7 +105,7 @@ class Console:
         if mode not in ("demo", "live") or action not in ("list", "inspect", "apply", "restore", "mirror"):
             raise PilotError("Unknown workspace or operation.")
         with self.lock:
-            adb = self.demo if mode == "demo" else self.live
+            adb = Recorder(self.demo if mode == "demo" else self.live)
             directory = Path(self.temp.name) if mode == "demo" else self.directory
             devices = adb.devices()
             if action == "list":
@@ -93,7 +121,7 @@ class Console:
             if action == "mirror":
                 if mode != "live":
                     raise PilotError("Screen control requires a connected device in ADB mode.")
-                return self.mirror(device)
+                return {**self.mirror(device), "commands": [*adb.log, "scrcpy --serial <device> --no-audio"]}
             if action in ("apply", "restore"):
                 animation.change(adb, device, action, directory)
             info = adb.info(device)
@@ -104,7 +132,12 @@ class Console:
                 battery = battery_values(adb.command(device, "shell", "dumpsys", "battery"))
             except PilotError:
                 battery = {"percent": None, "temperature": None}
+            try:
+                integrity = security.check(adb, device)
+            except PilotError:
+                integrity = None
             return {**info, "current": current, "original": original, "battery": battery,
+                    "security": integrity, "commands": adb.log,
                     "mirrorAvailable": mode == "live" and bool(shutil.which("scrcpy"))}
 
     def mirror(self, device):

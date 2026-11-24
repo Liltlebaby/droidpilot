@@ -445,3 +445,96 @@ dialog::backdrop {
     font-size: 13px;
   }
 }
+.device-title span.rooted {
+  color: #9a3412;
+}
+.verdict {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 620;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.verdict.ok {
+  background: #e5f2ee;
+  color: #1d5c47;
+}
+.verdict.warn {
+  background: #fff1e6;
+  color: #9a3412;
+}
+.checks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+}
+.checks li {
+  display: grid;
+  grid-template-columns: 22px minmax(120px, 190px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+.checks li + li {
+  border-top: 1px solid var(--line);
+}
+.checks .label {
+  font-weight: 630;
+}
+.checks .value {
+  color: #48566c;
+  overflow-wrap: anywhere;
+}
+.checks .mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 750;
+  background: #eff2f7;
+  color: #4e596b;
+}
+.checks .ok .mark {
+  background: #d9efe6;
+  color: #1d5c47;
+}
+.checks .warn .mark {
+  background: #ffe3cc;
+  color: #9a3412;
+}
+.commands summary {
+  cursor: pointer;
+  font-weight: 650;
+  font-size: 15px;
+}
+.commands ol {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 12px 16px;
+  background: #101935;
+  border-radius: 9px;
+  max-height: 260px;
+  overflow: auto;
+}
+.commands code {
+  color: #d8e2ff;
+  font-size: 12.5px;
+  margin: 2px 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 520px) {
+  .checks li {
+    grid-template-columns: 20px minmax(0, 1fr);
+    padding: 10px 12px;
+  }
+  .checks .value {
+    grid-column: 2;
+  }
+}
