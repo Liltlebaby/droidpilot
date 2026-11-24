@@ -1,0 +1,7 @@
+# Simulated fixture. Written for parsing tests. No device data.
+11-15 08:11:21.234  1042  1042 E AndroidRuntime: FATAL EXCEPTION: main
+11-15 08:11:21.234  1042  1042 E AndroidRuntime: Process: org.example.notes, PID: 1042
+11-15 08:11:21.234  1042  1042 E AndroidRuntime: java.lang.RuntimeException: Could not open note
+11-15 08:11:21.234  1042  1042 E AndroidRuntime:     at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:4100)
+11-15 08:11:21.234  1042  1042 E AndroidRuntime: Caused by: java.lang.IllegalArgumentException: Missing note id
+11-15 08:11:21.234  1042  1042 E AndroidRuntime:     at org.example.notes.NoteScreen.open(NoteScreen.kt:42)

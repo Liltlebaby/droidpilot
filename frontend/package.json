@@ -1,0 +1,23 @@
+{
+  "name": "droidpilot-console",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "check": "tsc --noEmit",
+    "build": "npm run check && node build.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "esbuild": "^0.27.0",
+    "prettier": "3.8.1",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,6 @@
+id=droidpilot_boot_report
+name=DroidPilot Boot Report
+version=0.1.0
+versionCode=1
+author=DroidPilot
+description=Record local boot diagnostics for an authorized Magisk test device.
