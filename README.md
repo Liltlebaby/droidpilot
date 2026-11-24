@@ -2,9 +2,9 @@
 
 DroidPilot is a local Android engineering console. Select an authorized handset, inspect its battery and animation settings, change all three animation scales, and restore their exact original values. Open a scrcpy window to control the selected device from your computer. The Python CLI also triages crashes and times app launches. This is a new AI-assisted portfolio project.
 
-![Device Control Center in Demo mode showing three saved originals and three verified current values](docs/media/dashboard-demo.png)
+![Live Device Control Center inspecting an authorized Samsung SM-A135F running Android 14](docs/media/samsung-inspection.png)
 
-*Captured from the running application in Demo mode after two applies. The Pixel 8 and its telemetry are simulated.*
+*Live ADB inspection of the Samsung handset. All three current values came from the phone. The short identifier beside Ready is a temporary session label.* [Simulated apply and backup example](docs/media/dashboard-demo.png)
 
 ## Run the dashboard
 

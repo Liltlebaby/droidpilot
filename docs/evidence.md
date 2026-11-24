@@ -4,7 +4,7 @@ This repository contains a new AI-assisted project. Evidence below distinguishes
 
 | Feature | Implementation | Automated evidence | Device-tested | Evidence to add |
 | --- | --- | --- | --- | --- |
-| Device Control Center | Implemented | Desktop and mobile browser checks; demo apply twice and restore; JSON API and confirmation checks | Not tested | Actual dashboard screenshot and recording of an authorized handset |
+| Device Control Center | Implemented | Desktop and mobile browser checks; demo apply twice and restore; JSON API and confirmation checks | Live handset selection, telemetry and animation inspection | [Real Samsung dashboard screenshot](media/samsung-inspection.png). Screen control and write demo pending |
 | ADB Doctor | Implemented | Mock-tested; missing-ADB error exercised locally | Authorized wireless inventory and model/release reads on Samsung SM-A135F | Pre-authorization USB capture pending. [Handset observations](handset.md) |
 | Animation | Implemented | Mock-tested with repeated apply, absent values, rollback and retry | Initial three scales read on Samsung SM-A135F | Values after both applies and after restore |
 | Crash Triage | Implemented | Mock-tested and compared against an explicitly simulated example | Not tested | Sanitized crash report from an approved test app |

@@ -50,4 +50,4 @@ The browser tests start a dedicated Python process on an ephemeral loopback port
 - **Crash.** Real parser and renderer code run against synthetic threadtime and brief-format events, including interleaved process IDs, nested causes, absent app frames and empty input.
 - **Startup.** Mock activity-manager output drives the real CSV writer and summary calculation. Tests cover command ordering, odd and even medians, partial failures, missing timings and component validation.
 
-Hardware runs need an operator with the authorized device. The smoke tests here record no physical-device performance or boot observations. [Device evidence procedure](evidence.md)
+Wireless ADB inspection was separately exercised on a Samsung SM-A135F with Android 14. The live dashboard read the three current scales and battery telemetry and supplied the README image. [Handset evidence](handset.md)
