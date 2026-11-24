@@ -6,7 +6,11 @@ DroidPilot is a local Android engineering console. Select an authorized handset,
 
 *Live ADB inspection of the Samsung handset. All three current values came from the phone. The short identifier beside Ready is a temporary session label.* [Simulated apply and backup example](docs/media/dashboard-demo.png)
 
-The live demo applies the 0.5× profile twice, verifies that the original values are preserved, and restores all three settings. The same handset completed ten force-stop-based Display Settings launches with a median of 1,181.5 ms. [Watch the 85-second Samsung demo](docs/media/samsung-adb-demo.mp4) · [Handset evidence and timing data](docs/handset.md)
+[![Live Samsung demo: apply 0.5×, then restore the original 1.0× values (excerpt, 1.5× speed)](docs/media/samsung-adb-demo-preview.gif)](docs/media/samsung-adb-demo.mp4)
+
+*Excerpt at 1.5× speed: apply 0.5× to all three scales, then restore the original 1.0× values. Select the preview to open the full recording.*
+
+The live demo applies the 0.5× profile twice, verifies that the original values are preserved, and restores all three settings. The same handset completed ten force-stop-based Display Settings launches with a median of 1,181.5 ms. [Full 85-second Samsung demo (MP4, 1.2 MB)](docs/media/samsung-adb-demo.mp4) · [Handset evidence and timing data](docs/handset.md)
 
 ## Run the dashboard
 
